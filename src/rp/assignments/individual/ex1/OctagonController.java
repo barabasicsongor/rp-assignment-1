@@ -3,28 +3,16 @@ package rp.assignments.individual.ex1;
 import rp.robotics.DifferentialDriveRobot;
 import rp.systems.StoppableRunnable;
 
-/**
- * 
- * A placeholder to show you how you could start writing a controller for the
- * first part of the first individual assignment (creating a controller which
- * drives in a pentagon). Note that you don't have to follow this structure for
- * your controller as there are more elegant and efficient (at least in terms of
- * numbers of lines of code) in which you can implement the different shape
- * controllers.
- * 
- * @author Nick Hawes
- *
- */
-public class PentagonController implements StoppableRunnable {
+public class OctagonController implements StoppableRunnable {
 
 	private static final float PI = 180.0f;
-	private static final float INTERNAL_ANGLE = 108.0f;
+	private static final float INTERNAL_ANGLE = 135.0f;
 	
 	private final DifferentialDriveRobot robot;
 	private final float sideLength;
 	private boolean robot_run;
 	
-	public PentagonController(DifferentialDriveRobot robot, float sideLength) {
+	public OctagonController(DifferentialDriveRobot robot, float sideLength) {
 		this.robot = robot;
 		this.sideLength = sideLength;
 		this.robot_run = true;
