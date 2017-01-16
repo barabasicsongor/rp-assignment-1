@@ -1,7 +1,7 @@
 package rp.assignments.individual.ex1;
 
-
 import lejos.robotics.RangeFinder;
+import rp.config.RangeFinderDescription;
 import rp.robotics.DifferentialDriveRobot;
 import rp.robotics.EventBasedTouchSensor;
 import rp.systems.ControllerWithTouchSensor;
@@ -27,19 +27,24 @@ import rp.systems.StoppableRunnable;
  */
 public class SolutionFactory {
 
-	public static StoppableRunnable createPentagonController(
-			DifferentialDriveRobot _robot, Float _sideLength) {
+	public static StoppableRunnable createPentagonController(DifferentialDriveRobot _robot, Float _sideLength) {
 		return new PentagonController(_robot, _sideLength);
 	}
 
-	public static StoppableRunnable createOctagonController(
-			DifferentialDriveRobot _robot, Float _sideLength) {
-		return null;
+	public static StoppableRunnable createOctagonController(DifferentialDriveRobot _robot, Float _sideLength) {
+		return new OctagonController(_robot, _sideLength);
 	}
 
-	public static StoppableRunnable createNonagonController(
-			DifferentialDriveRobot _robot, Float _sideLength) {
-		return null;
+	public static StoppableRunnable createNonagonController(DifferentialDriveRobot _robot, Float _sideLength) {
+		return new NonagonController(_robot, _sideLength);
 	}
 
+	public static ControllerWithTouchSensor createBumperController(DifferentialDriveRobot _robot) {
+		return new BumperController(_robot);
+	}
+
+	public static EventBasedTouchSensor createVirtualBumper(RangeFinderDescription _desc, RangeFinder _ranger, Float _touchRange) {
+		return new VirtualBumperController(_desc, _ranger, _touchRange);
+	}
+	
 }
