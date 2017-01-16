@@ -35,7 +35,7 @@ public class ViewTest {
 		Ex1Tests tests = new Ex1Tests();
 		// Create the test object plus the controller for the test (via
 		// SolutionFactory)
-		RobotTest<?> test = tests.createPentagonTest();
+		RobotTest<?> test = tests.createVirtualBumperTest();
 		// Create the visualisation of the test, then run everything
 		TestViewer demo = new TestViewer(test, test.getSimulation());
 		demo.run();
