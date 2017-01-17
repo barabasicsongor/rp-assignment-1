@@ -9,12 +9,12 @@ public class BumperController implements ControllerWithTouchSensor {
 
 	private final DifferentialDriveRobot robot;
 	private boolean robot_run;
-	private boolean robot_bumped;
+	private boolean is_pressed;
 
 	public BumperController(DifferentialDriveRobot robot) {
 		this.robot = robot;
 		this.robot_run = true;
-		this.robot_bumped = false;
+		this.is_pressed = false;
 	}
 
 	@Override
@@ -28,16 +28,20 @@ public class BumperController implements ControllerWithTouchSensor {
 
 			try {
 
-				if (this.robot_bumped) {
+				if (this.is_pressed) {
+					this.robot.getDifferentialPilot().stop();
+					this.robot.getDifferentialPilot().travel(-0.1);
+					
+//					if(this.robot.getPose().getHeading() == 180.0) {
+//						this.robot.setPose(new Pose(this.robot.getPose().getX(), this.robot.getPose().getY(), 0.0f));
+//					} else {
+//						this.robot.setPose(new Pose(this.robot.getPose().getX(), this.robot.getPose().getY(), 180.0f));
+//					}
+					
+					this.robot.getDifferentialPilot().rotate(180.00);
 					this.robot.getDifferentialPilot().stop();
 					
-					if(this.robot.getPose().getHeading() == 180.0) {
-						this.robot.setPose(new Pose(this.robot.getPose().getX(), this.robot.getPose().getY(), 0.0f));
-					} else {
-						this.robot.setPose(new Pose(this.robot.getPose().getX(), this.robot.getPose().getY(), 180.0f));
-					}
-					
-					this.robot_bumped = false;
+					this.is_pressed = false;
 				}
 				
 				this.robot.getDifferentialPilot().forward();
@@ -55,7 +59,7 @@ public class BumperController implements ControllerWithTouchSensor {
 	@Override
 	public void sensorPressed(TouchSensorEvent _e) {
 		// TODO Auto-generated method stub
-		this.robot_bumped = true;
+		this.is_pressed = true;
 	}
 
 	@Override
