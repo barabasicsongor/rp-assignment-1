@@ -53,7 +53,7 @@ public class ViewTest {
 		Ex1Tests tests = new Ex1Tests();
 		// Create the test object plus the controller for the test (via
 		// SolutionFactory)
-		RobotTest<?> test = tests.createPentagonTest();
+		RobotTest<?> test = tests.createBumperTest();
 		test.run();
 	}
 

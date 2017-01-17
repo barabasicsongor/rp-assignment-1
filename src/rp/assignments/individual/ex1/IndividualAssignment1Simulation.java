@@ -51,8 +51,10 @@ public class IndividualAssignment1Simulation {
 		// robot. We pass it the robot object from the simulator.
 		// It is important to note that this controller could also be used with
 		// a real robot provided you have a configuration object to describe it.
-		PentagonController controller = new PentagonController(
-				wrapper.getRobot(), 0.5f);
+		PentagonController controller = new PentagonController(wrapper.getRobot(), 0.5f);
+		OctagonController controller1 = new OctagonController(wrapper.getRobot(), 0.5f);
+		NonagonController controller2 = new NonagonController(wrapper.getRobot(), 0.5f);
+		BumperController controller3 = new BumperController(wrapper.getRobot());
 
 		// This call attaches theevent listener implemented by the controller
 		// to the touch sensor on the simulated robot
@@ -83,7 +85,7 @@ public class IndividualAssignment1Simulation {
 
 		// Start the controller running -- this should move your robot, provided
 		// your controller does something.
-		controller.run();
+		controller3.run();
 
 	}
 
