@@ -2,21 +2,21 @@ package rp.assignments.individual.ex1;
 
 import java.util.ArrayList;
 
-import lejos.nxt.TouchSensor;
 import lejos.robotics.RangeFinder;
 import rp.config.RangeFinderDescription;
 import rp.robotics.EventBasedTouchSensor;
 import rp.robotics.TouchSensorEvent;
 import rp.robotics.TouchSensorListener;
+import rp.systems.StoppableRunnable;
 
-public class VirtualBumperController implements EventBasedTouchSensor {
+public class VirtualBumperController implements EventBasedTouchSensor, StoppableRunnable {
 
 	private final RangeFinderDescription desc;
 	private final RangeFinder ranger;
 	private final Float touchRange;
 
-	private ArrayList<TouchSensorListener> listeners = new ArrayList<TouchSensorListener>();
-	private boolean is_pressed, is_bumped, is_running;
+	private ArrayList<TouchSensorListener> listeners;
+	private boolean is_pressed, is_running;
 	private float lastValue;
 
 	public VirtualBumperController(RangeFinderDescription desc, RangeFinder ranger, Float touchRange) {
@@ -24,9 +24,36 @@ public class VirtualBumperController implements EventBasedTouchSensor {
 		this.ranger = ranger;
 		this.touchRange = touchRange;
 		this.is_pressed = false;
-		this.is_bumped = false;
-		this.is_running = false;
+		this.is_running = true;
 		this.lastValue = desc.getMaxRange();
+		listeners = new ArrayList<TouchSensorListener>();
+		(new Thread(this)).start();
+	}
+
+	@Override
+	public void run() {
+		while (is_running) {
+
+			if (ranger.getRange() <= touchRange + desc.getNoise() && !is_pressed) {
+				is_pressed = true;
+				for (TouchSensorListener l : listeners) {
+					l.sensorPressed(new TouchSensorEvent(lastValue, ranger.getRange()));
+				}
+			} else if (is_pressed && ranger.getRange() > touchRange + desc.getNoise()) {
+				is_pressed = false;
+				for (TouchSensorListener l : listeners) {
+					l.sensorReleased(new TouchSensorEvent(lastValue, ranger.getRange()));
+					l.sensorBumped(new TouchSensorEvent(lastValue, ranger.getRange()));
+				}
+			}
+			lastValue = ranger.getRange();
+
+		}
+	}
+
+	@Override
+	public void stop() {
+		is_running = false;
 	}
 
 	@Override
@@ -37,41 +64,6 @@ public class VirtualBumperController implements EventBasedTouchSensor {
 	@Override
 	public void addTouchSensorListener(TouchSensorListener _listener) {
 		this.listeners.add(_listener);
-
-		if (!is_running) {
-			is_running = true;
-
-			new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					while (true) {
-						try {
-
-							if (ranger.getRange() <= touchRange + desc.getNoise() && !is_pressed) {
-								is_pressed = true;
-								for(TouchSensorListener l : listeners) {
-									l.sensorPressed(new TouchSensorEvent(lastValue, ranger.getRange()));
-								}
-							} else if (is_pressed && ranger.getRange() > touchRange + desc.getNoise()) {
-								is_pressed = false;
-								for(TouchSensorListener l : listeners) {
-									l.sensorReleased(new TouchSensorEvent(lastValue, ranger.getRange()));
-									l.sensorBumped(new TouchSensorEvent(lastValue, ranger.getRange()));
-								}
-							}
-
-							lastValue = ranger.getRange();
-							Thread.sleep(5);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			}).start();
-		}
-
 	}
 
 }
