@@ -48,6 +48,11 @@ public class VirtualBumperController implements EventBasedTouchSensor, Stoppable
 			}
 			lastValue = ranger.getRange();
 
+			try {
+				Thread.sleep((long) this.desc.getRate());
+			} catch (InterruptedException e) {
+				System.out.println("Error making thread sleep");
+			}
 		}
 	}
 
